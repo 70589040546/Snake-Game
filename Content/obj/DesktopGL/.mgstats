@@ -1,0 +1,3 @@
+Source File,Dest File,Processor Type,Content Type,Source File Size,Dest File Size,Build Seconds
+"C:/Users/asibr/Desktop/C# Projects/MyGame/Content/File.spritefont","C:/Users/asibr/Desktop/C# Projects/MyGame/Content/bin/DesktopGL/TextFont.xnb","FontDescriptionProcessor","SpriteFontContent",2071,267295,0,2578616
+"C:/Users/asibr/Desktop/C# Projects/MyGame/Content/NormalFont.spritefont","C:/Users/asibr/Desktop/C# Projects/MyGame/Content/bin/DesktopGL/NormalFont.xnb","FontDescriptionProcessor","SpriteFontContent",2068,70687,0,0241803

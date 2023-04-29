@@ -10,7 +10,9 @@ public class Game1 : Game
     private SpriteBatch _spriteBatch;
     private Texture2D t;
     private Snake _snake;
-
+    private Apple _apple;
+    private SpriteFont font;
+    private SpriteFont normalFont;
     public Game1()
     {
         _graphics = new GraphicsDeviceManager(this);
@@ -30,9 +32,13 @@ public class Game1 : Game
     protected override void LoadContent()
     {
         _spriteBatch = new SpriteBatch(GraphicsDevice);
-        _snake = new Snake(_spriteBatch);
+        font = Content.Load<SpriteFont>("TextFont");
+        normalFont = Content.Load<SpriteFont>("NormalFont");
         t = new Texture2D(_spriteBatch.GraphicsDevice, 1, 1, false, SurfaceFormat.Color);
         t.SetData(new[] {Color.White});
+        _snake = new Snake(t);
+        _apple = new Apple(t);
+   
     }
 
     protected override void Update(GameTime gameTime)
@@ -40,6 +46,7 @@ public class Game1 : Game
         if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
             Exit();
         _snake.Update(gameTime);
+        _apple.Update(_snake.snakeHead);
         base.Update(gameTime);
     }
 
@@ -48,15 +55,8 @@ public class Game1 : Game
         GraphicsDevice.Clear(Color.Black);
         
         _spriteBatch.Begin();
-        for (int i = 0; i < 800; i += 25)
-        {
-            for (int j = 0; j < 800; j+=32)
-            {
-                _spriteBatch.Draw(t, new Rectangle(i, j, 32, 1), Color.White);
-                _spriteBatch.Draw(t, new Rectangle(j,i, 1, 32), Color.White);
-            }
-        }
-        _snake.Draw(_spriteBatch, gameTime);
+        _snake.Draw(_spriteBatch, font);
+        _apple.Draw(_spriteBatch);
         _spriteBatch.End();
 
         base.Draw(gameTime);
