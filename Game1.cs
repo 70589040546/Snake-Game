@@ -8,6 +8,7 @@ public class Game1 : Game
 {
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
+    private Score score;
     private Texture2D t;
     private Snake _snake;
     private Apple _apple;
@@ -25,7 +26,6 @@ public class Game1 : Game
 
     protected override void Initialize()
     {
-
         base.Initialize();
     }
 
@@ -38,7 +38,7 @@ public class Game1 : Game
         t.SetData(new[] {Color.White});
         _snake = new Snake(t);
         _apple = new Apple(t);
-   
+        score= new Score();
     }
 
     protected override void Update(GameTime gameTime)
@@ -46,7 +46,6 @@ public class Game1 : Game
         if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
             Exit();
         _snake.Update(gameTime);
-        _apple.Update(_snake.snakeHead);
         base.Update(gameTime);
     }
 
