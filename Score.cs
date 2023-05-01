@@ -1,16 +1,17 @@
 using System;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 public class Score
 {
-  static readonly string scorePath= "score.txt";
-  public static Score instance;
-  public int score;
+  public static readonly string scorePath= "score.txt";
+  public static Score Instance;
+  public int score{get;set;}
   private int _maxScore {get; set;}
   public Score(){
-    if(instance == null){
-        instance = this;
+    if(Instance == null){
+        Instance = this;
     }
     score = 0;
     ReadScoreFile();
@@ -32,18 +33,16 @@ public class Score
     return _maxScore;
   }
   public void CheckMaxAndCurrentScore(){
-    _maxScore = (score > _maxScore) ? score : _maxScore;
-    Console.Write(_maxScore);
+    if(score > _maxScore){
+      _maxScore = score;
+      writeNewHighScore();
+    }
+   
   }
-  
-  // Fix this function => Open score file and delete first line and again write Max Score.
-//   public void writeNewHighScore(){
-//     string scoreLine;
-//     StreamWriter sr = new StreamWriter("score.txt");
-//     while((scoreLine = sr.ReadLine()) != null)
-//     {
-//         sw.WriteLine("");
-//     } 
-//   }
+  public void writeNewHighScore(){
+    var lines = File.ReadAllLines("score.txt");
+    File.WriteAllLines("score.txt", lines.Skip(1).ToArray());
+    File.WriteAllText("score.txt",  _maxScore.ToString());
+  }
   
 }

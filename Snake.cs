@@ -11,12 +11,12 @@ public class Snake
     private float movementCounter;
     private List<Vector2> snakeParts;
     public Vector2 snakeHead;
-    Texture2D t;
+    private Texture2D _texture;
     
-    public Snake(Texture2D t)
+    public Snake(Texture2D texture)
     {
-        state = GameState.Playing;
-        this.t = t;
+        gameState = GameState.Playing;
+        _texture = texture;
         snakeParts = new List<Vector2>();
         snakeParts.Add(new Vector2(0, 256));
         snakeHead = snakeParts[snakeParts.Count - 1];
@@ -24,11 +24,12 @@ public class Snake
     }
     public void Update(GameTime gameTime)
     {
-        switch (state)
+        switch (gameState)
         {
             case GameState.Playing:
 
                 movementCounter += (float)gameTime.ElapsedGameTime.TotalSeconds;
+
                 if (Keyboard.GetState().GetPressedKeyCount() <= 1)
                 {
                     if (Keyboard.GetState().IsKeyDown(Keys.W) && Direction != new Vector2(0, 1)) { Direction = new Vector2(0, -1); }
@@ -53,12 +54,12 @@ public class Snake
                     if (snakeHead == Apple.Position) {
                         Apple.ChangeApplePositon(); 
                         snakeParts.Insert(0, new Vector2(snakeParts.Last().X - CELL_SIZE * Direction.X, snakeParts.Last().Y - CELL_SIZE * Direction.Y));
-                        Score.instance.score += Globals.random.Next(0, 200);
+                        Score.Instance.score += Globals.random.Next(0, 200);
                     }
-                    if (snakeHead.X > 800 || snakeHead.Y < 0 || snakeHead.Y > 800 || snakeHead.X < 0) { state = GameState.GameOver; }
+                    if (snakeHead.X > 800 || snakeHead.Y < 0 || snakeHead.Y > 800 || snakeHead.X < 0) { gameState = GameState.GameOver; }
                     for (int i = snakeParts.Count - 2; i >= 0; i--)
                     {
-                        if (snakeHead == snakeParts[i]) { state = GameState.GameOver; }
+                        if (snakeHead == snakeParts[i]) { gameState = GameState.GameOver; }
                     }
                 }
 
@@ -74,7 +75,7 @@ public class Snake
 
     public void Draw(SpriteBatch _spriteBatch, SpriteFont font)
     {
-        switch (state)
+        switch (gameState)
         {
             case GameState.Playing:
                 
@@ -82,8 +83,8 @@ public class Snake
                 {
                     for (int j = 0; j < 800; j += 32)
                     {
-                        _spriteBatch.Draw(t, new Rectangle(i, j, CELL_SIZE, 1), Color.White);
-                        _spriteBatch.Draw(t, new Rectangle(j, i, 1, CELL_SIZE), Color.White);
+                        _spriteBatch.Draw(_texture, new Rectangle(i, j, CELL_SIZE, 1), Color.White);
+                        _spriteBatch.Draw(_texture, new Rectangle(j, i, 1, CELL_SIZE), Color.White);
                     }
                 }
 
@@ -91,24 +92,25 @@ public class Snake
                 {
                     if (snakeParts.Last() == item)
                     {
-                        _spriteBatch.Draw(t, new Rectangle((int)item.X, (int)item.Y, CELL_SIZE, CELL_SIZE), Color.Green);
+                        _spriteBatch.Draw(_texture, new Rectangle((int)item.X, (int)item.Y, CELL_SIZE, CELL_SIZE), Color.Green);
                     }
                     else
                     {
-                        _spriteBatch.Draw(t, new Rectangle((int)item.X, (int)item.Y, CELL_SIZE, CELL_SIZE), Color.GreenYellow);
+                        _spriteBatch.Draw(_texture, new Rectangle((int)item.X, (int)item.Y, CELL_SIZE, CELL_SIZE), Color.GreenYellow);
                     }
                 }
-                _spriteBatch.DrawString(font, "Score : " + Score.instance.score.ToString(), new Vector2(10, -5), Color.Yellow, 0f, Vector2.Zero, .4f, SpriteEffects.None, 1f);
+                _spriteBatch.DrawString(font, "Score : " + Score.Instance.score.ToString(), new Vector2(10, -5), Color.Yellow, 0f, Vector2.Zero, .4f, SpriteEffects.None, 1f);
                 break;
             case GameState.GameOver:
-                Score.instance.CheckMaxAndCurrentScore();
-                Vector2 bounds = font.MeasureString("Game Over!");
-                _spriteBatch.DrawString(font, "Game Over!", new Vector2(400 - bounds.X / 2, 300 - bounds.Y / 2), Color.Red);
-                bounds = font.MeasureString("Score : " + Score.instance.GetMaxScore().ToString());
-                _spriteBatch.DrawString(font, "Score : " + Score.instance.GetMaxScore().ToString(), new Vector2(600 - bounds.X / 2, 450 - bounds.Y / 2), Color.Red, 0f, Vector2.Zero, .5f, SpriteEffects.None, 1f);
-                // bounds = font.MeasureString("Press R to Play Again");
-                // _spriteBatch.DrawString(font, "Press R to Play Again", new Vector2(600 - bounds.X / 2, 450 - bounds.Y / 2), Color.Red, 0f, Vector2.Zero, .5f, SpriteEffects.None, 1f);
-                
+                Score.Instance.CheckMaxAndCurrentScore();
+                Vector2 textBounds = font.MeasureString("Game Over!");
+                _spriteBatch.DrawString(font, "Game Over!", new Vector2(400 - textBounds.X / 2, 300 - textBounds.Y / 2), Color.Red);
+                textBounds = font.MeasureString("Max Score : " + Score.Instance.GetMaxScore().ToString());
+                _spriteBatch.DrawString(font, "Max Score : " + Score.Instance.GetMaxScore().ToString(), new Vector2(550 - textBounds.X / 2, 450 - textBounds.Y / 2), Color.Chartreuse, 0f, Vector2.Zero, .5f, SpriteEffects.None, 1f);
+                textBounds = font.MeasureString("Press R to Play Again");
+                _spriteBatch.DrawString(font, "Press R to Play Again", new Vector2(600 - textBounds.X / 2, 550 - textBounds.Y / 2), Color.Red, 0f, Vector2.Zero, .5f, SpriteEffects.None, 1f);
+                textBounds = font.MeasureString("Created By Allahin Yarragi");
+                _spriteBatch.DrawString(font, "Created By Allahin Yarragi", new Vector2(500 - textBounds.X / 2, 800 - textBounds.Y / 2), Color.Teal, 0f, Vector2.Zero, .5f, SpriteEffects.None, 1f);    
                 break;
             default:
                 break;
@@ -118,12 +120,12 @@ public class Snake
     }
     private void InitializeGame()
     {
-        state = GameState.Playing;
+        gameState = GameState.Playing;
         snakeParts.Clear();
         snakeParts.Add(new Vector2(0, 256));
         Direction = new Vector2(1, 0);
         movementCounter = 0f;
-        Score.instance.score = 0;
+        Score.Instance.score = 0;
     }
 
 
